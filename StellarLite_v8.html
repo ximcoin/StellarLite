@@ -976,6 +976,7 @@ const PAGE_SIZE = 20;
 					  .catch(function(err) {
 						$('#rowpaybar').hide();
 						$("#paywarning").show().html('<font color="FF0000"><b>The transaction failed... please check console details</b></font>');
+						$("#paysend").fadeIn("slow");
 						console.log('An error has occured:');
 						console.log(err);
 					  });
@@ -1017,6 +1018,7 @@ const PAGE_SIZE = 20;
 						  .catch(function(err) {
 							$('#rowpaybar').hide();
 							$("#paywarning").show().html('<font color="FF0000"><b>The transaction failed... please check details</b></font>');
+							$("#paysend").fadeIn("slow");
 							console.log('An error has occured:');
 							console.log(err.response);
 						  });
