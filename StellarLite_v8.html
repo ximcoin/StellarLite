@@ -971,6 +971,7 @@ const PAGE_SIZE = 20;
 						$('#payamount').val("");
 						$("#success").fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="008800"><b>Sent!</b></font>');
 						StellarController.fetchBalance();
+						$("#paysend").fadeIn("slow");
 					  })
 					  .catch(function(err) {
 						$('#rowpaybar').hide();
