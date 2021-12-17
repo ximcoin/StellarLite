@@ -1776,11 +1776,15 @@ $(document).ready(function(){
 			StellarController.closeAccount($("#pubkey").val(),$('#mergeAccount').val());
 			}
 		});
-
+		$('#payto').on('keyup', function () {
+			$('#paywarning').hide();
+			$('#submitPaysend').show();
+		});
 		$("#payamount").on('keyup', function () {
 			$('#memo_row').fadeIn('slow');
+			$('#paywarning').hide();
+			$('#submitPaysend').show();
 		});
-
 		$(document).on("change keyup paste", ".ocalc",function(event){ // main offer calculator
 			var asset_id = $(this).attr('id').split("-");
 			if (asset_id[0]!="") {
