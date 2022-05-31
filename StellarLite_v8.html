@@ -1204,10 +1204,11 @@ const PAGE_SIZE = 20;
 							StellarController.fetchBalance();
 						  })
 						  .catch(function(err) {
-							$('#'+assetid+'rowofferbar').hide();
-							if (err.response.data.extras.result_codes.operations=="op_underfunded") $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
 							console.log('An error has occured:');
 							console.log(JSON.stringify(err.response, null, 2));
+							$('#'+assetid+'rowofferbar').hide(); 
+							$('#'+assetid+'success').show().html('<font color="#FF0000"><b>Failed: '+err.response.data.title+', try again</b></font>');
+							if (err.response.data.extras.result_codes.operations=="op_underfunded") $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
 						  });
 				});
 				} else {
@@ -1257,11 +1258,12 @@ const PAGE_SIZE = 20;
 							StellarController.fetchBalance();
 						  })
 						  .catch(function(err) {
-							$('#'+assetid+'rowofferbar').hide();
-							if (err.response.data.extras.result_codes.operations=="op_underfunded") { $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
-							} else { $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Error... check console log and try again</b></font>'); } 
 							console.log('An error has occured:');
 							console.log(JSON.stringify(err.response, null, 2));
+							$('#'+assetid+'rowofferbar').hide(); 
+							$('#'+assetid+'success').show().html('<font color="#FF0000"><b>Failed: '+err.response.data.title+', try again</b></font>');
+							if (err.response.data.extras.result_codes.operations=="op_underfunded") { $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
+							} else { $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Error... check console log and try again</b></font>'); } 
 						  });
 				});
 				} else {
@@ -1356,8 +1358,9 @@ const PAGE_SIZE = 20;
 							if (offmode!="upauto") StellarController.fetchBalance();
 						  })
 						  .catch(function(err) {
-							$('#rowpaybar').hide();							
-							//console.log(JSON.stringify(err, null, 2));
+							console.log('An error has occured:');
+							console.log(JSON.stringify(err.response, null, 2));
+							$('#rowpaybar').hide();				
 							if (err.name!="Error") {
 							if (err.response.data.extras.result_codes.transaction=="tx_bad_seq") $('#'+assetid+'success').fadeIn("slow").html('<font color="880000"><b>Error: bad Stellar tx sequence number.. login again</b></font>');
 							if (err.response.data.extras.result_codes.operations=="op_underfunded") $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
