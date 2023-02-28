@@ -471,7 +471,7 @@ const PAGE_SIZE = 20;
 				if(idb_data[idb]) {	if(idb_data[idb]!=buyerkey) idb = buyerkey.slice(-3); } else { idb_data[idb] = buyerkey; }
 			}
 			var offersum = parseFloat(buying_obj._embedded.records[i].price) *	parseFloat(buying_obj._embedded.records[i].amount);
-			var bofferprice = parseFloat(buying_obj._embedded.records[i].price_r.d / buying_obj._embedded.records[i].price_r.n).toFixed(7); 
+			var bofferprice = parseFloat(buying_obj._embedded.records[i].price_r.d / buying_obj._embedded.records[i].price_r.n); 
 			var obj = {
 				idnum: buying_obj._embedded.records[i].id,
 				idmin: idb,
@@ -518,7 +518,7 @@ const PAGE_SIZE = 20;
 			if (sellerkey == $("#pubkey").val()) { ids = "<b>you</b>"; } else {	ids = sellerkey.slice(-2); 
 				if(ids_data[ids]) {	if(ids_data[ids]!=sellerkey) ids = sellerkey.slice(-3); } else { ids_data[ids] = sellerkey; }
 			}
-			var sofferprice = parseFloat(selling_obj._embedded.records[i].price_r.n / selling_obj._embedded.records[i].price_r.d).toFixed(7);
+			var sofferprice = parseFloat(selling_obj._embedded.records[i].price_r.n / selling_obj._embedded.records[i].price_r.d);
 			var objr = {
 				idnum: selling_obj._embedded.records[i].id,
 				idmin: ids,
@@ -654,12 +654,12 @@ const PAGE_SIZE = 20;
 				$(".tbutton").fadeIn("slow");
 				$("#displaypubkey").html(kp.publicKey()+'&nbsp;&nbsp;&nbsp;&nbsp;').show(); //
             })
-			.catch(StellarSdk.NotFoundError, function(err) { alert("x");
+			.catch(StellarSdk.NotFoundError, function(err) { 
 				$("#warning").show().html('<font color="FF0000"><b>Account empty: You must first fund your account with Stellar Lumens (XLM)</b></font>');
 			})
 			.catch(function (err) {
-				$("#warning").show().html('<font color="FF0000"><b>Account deleted</b></font>');
-				console.log(err);
+				$("#warning").show().html('<font color="FF0000"><b>Key failed</b></font>');
+				console.log("error: "+err);				
 			});
         },
         fetchBalance: function() {
@@ -893,7 +893,7 @@ const PAGE_SIZE = 20;
 						$("#create"+asset+"tl").attr('title', 'Add '+trustAsset+' trustline');
 						$("#create"+asset+"tl").removeClass('w3-light-grey').addClass('w3-grey');
 						StellarController.fetchBalance();
-						$('#'+asset+'success').show().delay(8000).fadeOut("slow").html('<font color="008800"><b> '+trustAsset+' trustline has been removed</b></font>');
+						$('#'+asset+'success').show().delay(8000).html('<font color="008800"><b> '+trustAsset+' trustline has been removed</b></font>').fadeOut("slow");
 					})
 					.catch(function(err) {
 						$('#'+asset+'rowofferbar').hide();
@@ -977,13 +977,13 @@ const PAGE_SIZE = 20;
 						console.log(transactionResult._links.transaction.href);
 						$('#rowpaybar').hide();
 						$('#payamount').val("");
-						$("#success").fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="008800"><b>Sent!</b></font>');
+						$("#success").fadeIn("slow").delay(8000).html('<font color="008800"><b>Sent!</b></font>').fadeOut("slow");
 						StellarController.fetchBalance();
 						$("#paysend").fadeIn("slow");
 					  })
 					  .catch(function(err) {
 						$('#rowpaybar').hide();
-						$("#paywarning").show().html('<font color="FF0000"><b>The transaction failed... please check console details</b></font>');
+						$("#paywarning").show().html('<font color="FF0000"><b>The transaction failed... please check console details</b></font><br><font color="660000">'+err+'</font>');
 						$("#paysend").fadeIn("slow");
 						console.log('An error has occured:');
 						console.log(err);
@@ -1019,7 +1019,7 @@ const PAGE_SIZE = 20;
 							$("#paywarning").hide();
 							$('#rowpaybar').hide();
 							$('#payamount').val("");
-							$("#success").fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="008800"><b>Sent!</b></font>');
+							$("#success").fadeIn("slow").delay(8000).html('<font color="008800"><b>Sent!</b></font>').fadeOut("slow");
 							StellarController.fetchBalance();
 							$("#paysend").fadeIn("slow");
 						  })
@@ -1121,16 +1121,18 @@ const PAGE_SIZE = 20;
 					  .then(function(transactionResult) {
 						//console.log(JSON.stringify(transactionResult, null, 2));
 						console.log('\n'+fromCode+' to '+toCode+' Success! View the transaction at: ');
-						console.log(transactionResult._links.transaction.href);
 						$("#paywarning").hide();
 						$('#rowpaybar').hide();
 						$('#convert_row').hide();
-						$("#success").fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="008800"><b>Conversion made!</b></font>');
+						$("#success").show().delay(8000).html('<font color="008800"><b>Conversion made!</b></font>').fadeOut("slow");
 						StellarController.fetchBalance();
+						console.log(transactionResult._links.transaction.href);
 					  })
 					  .catch(function(err) {
+						$('#submitConvert').hide();
 						console.log('An error has occured:');
-						console.log(err.response);
+						console.log(err);
+						// Read Error: Unknown PublicKeyType member for value 1 -- upgrade to protocol 13
 					  });
 				  })
 				  .catch(function(e) {
@@ -1208,9 +1210,9 @@ const PAGE_SIZE = 20;
 							StellarController.fetchBalance();
 						  })
 						  .catch(function(err) {
-							console.log('An error has occured:');
+						    console.log('An error has occured:');
 							console.log(JSON.stringify(err.response, null, 2));
-							$('#'+assetid+'rowofferbar').hide(); 
+							$('#'+assetid+'rowofferbar').hide();
 							$('#'+assetid+'success').show().html('<font color="#FF0000"><b>Failed: '+err.response.data.title+', try again</b></font>');
 							if (err.response.data.extras.result_codes.operations=="op_underfunded") $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
 						  });
@@ -1262,12 +1264,14 @@ const PAGE_SIZE = 20;
 							StellarController.fetchBalance();
 						  })
 						  .catch(function(err) {
-							console.log('An error has occured:');
-							console.log(JSON.stringify(err.response, null, 2));
+						    console.log('An error has occured:');
+							//console.log(JSON.stringify(err.response, null, 2));
+							console.log(JSON.stringify(err, null, 2));
 							$('#'+assetid+'rowofferbar').hide(); 
 							$('#'+assetid+'success').show().html('<font color="#FF0000"><b>Failed: '+err.response.data.title+', try again</b></font>');
 							if (err.response.data.extras.result_codes.operations=="op_underfunded") { $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
 							} else { $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Error... check console log and try again</b></font>'); } 
+							
 						  });
 				});
 				} else {
@@ -1362,9 +1366,10 @@ const PAGE_SIZE = 20;
 							if (offmode!="upauto") StellarController.fetchBalance();
 						  })
 						  .catch(function(err) {
-							console.log('An error has occured:');
+						    console.log('An error has occured:');
 							console.log(JSON.stringify(err.response, null, 2));
 							$('#rowpaybar').hide();				
+							$('#'+assetid+'success').show().html('<font color="#FF0000"><b>Failed: '+err.response.data.title+', try again</b></font>');		
 							if (err.name!="Error") {
 							if (err.response.data.extras.result_codes.transaction=="tx_bad_seq") $('#'+assetid+'success').fadeIn("slow").html('<font color="880000"><b>Error: bad Stellar tx sequence number.. login again</b></font>');
 							if (err.response.data.extras.result_codes.operations=="op_underfunded") $('#'+assetid+'success').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>Not enough '+fromCode+' available</b></font>');
@@ -1423,6 +1428,7 @@ const PAGE_SIZE = 20;
 		},
 
 		closeAccount: function(fromAccount,toAccount) {
+		$('#submitMerge').html("Doing... please wait");
 		 $("#paywarning").hide();
 		 //check toAccount ok?
 		 // go through each asset and sell all
@@ -1487,6 +1493,7 @@ const PAGE_SIZE = 20;
 				  })
 				  .catch(function(err) {
 					$('#mergeText').fadeIn("slow").delay(8000).fadeOut("slow").html('<font color="880000"><b>A problem has occured, please try again</b></font>');
+					$('#submitMerge').html("Click here to try again");
 					console.log('An error has occured:');
 					console.log(JSON.stringify(err.response, null, 2));
 				  });
@@ -1722,13 +1729,13 @@ $(document).ready(function(){
 		});
 		$(document).on("click",".offerclk",function(event){
 			var asset_id = $(this).attr('id').split("_");
-			$('#'+asset_id[1]+'-b-price').val(asset_id[2]);
+			$('#'+asset_id[1]+'-b-price').val((parseFloat(asset_id[2])+0.0000001));
 			if ($('#'+asset_id[1]+'-b-amount').val()!="") {
 				var totalsum = (parseFloat($('#'+asset_id[1]+'-b-amount').val()) * parseFloat($('#'+asset_id[1]+'-b-price').val()));
 				$('#'+asset_id[1]+'-b-total').val(parseFloat(totalsum.toFixed(7)));
 				$('#'+asset_id[1]+'butbtext').html("Buy "+$('#'+asset_id[1]+'-b-amount').val()+" "+asset_id[1]+" for "+parseFloat(totalsum.toFixed(7))+" XLM");
 			}
-			$('#'+asset_id[1]+'-s-price').val(asset_id[2]);
+			$('#'+asset_id[1]+'-s-price').val((parseFloat(asset_id[2])-0.0000001));
 			if ($('#'+asset_id[1]+'-s-amount').val()!="") {
 				var totalsum = (parseFloat($('#'+asset_id[1]+'-s-amount').val()) * parseFloat($('#'+asset_id[1]+'-s-price').val()));
 				$('#'+asset_id[1]+'-s-total').val(parseFloat(totalsum.toFixed(7)));
@@ -1785,12 +1792,12 @@ $(document).ready(function(){
 		});
 		$('#payto').on('keyup', function () {
 			$('#paywarning').hide();
-			$('#submitPaysend').show();
+			$('#paysend').show();
 		});
 		$("#payamount").on('keyup', function () {
 			$('#memo_row').fadeIn('slow');
 			$('#paywarning').hide();
-			$('#submitPaysend').show();
+			$('#paysend').show();
 		});
 		$(document).on("change keyup paste", ".ocalc",function(event){ // main offer calculator
 			var asset_id = $(this).attr('id').split("-");
