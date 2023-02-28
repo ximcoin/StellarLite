@@ -341,6 +341,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: sans-serif;}
 <!--
 const server = new StellarSdk.Server('https://horizon.stellar.org');
 const PAGE_SIZE = 20;
+const MAX_FEE = 1000;
 
 	var asset_key =  new Array();
 	var asset_domain =  new Array();
@@ -878,7 +879,7 @@ const PAGE_SIZE = 20;
 			  });
 			  if (trusted) {
 					console.log(" removing trustline ");
-					var tx = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+					var tx = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						.addOperation(StellarSdk.Operation.changeTrust({
 							asset: new StellarSdk.Asset(trustAsset,trustIssuer),
 							limit: "0"
@@ -906,7 +907,7 @@ const PAGE_SIZE = 20;
 					 });
 			  } else {
 					console.log(" making trustline ");
-					var tx = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+					var tx = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						.addOperation(StellarSdk.Operation.changeTrust({
 							asset: new StellarSdk.Asset(trustAsset,trustIssuer),
 						})).setTimeout(30).build();
@@ -961,7 +962,7 @@ const PAGE_SIZE = 20;
 				} else { var newAsset = new StellarSdk.Asset(receiverAsset, receiverIssuer); }
 				server.loadAccount(sourcePublicKey)
 				  .then(function(account) {
-					var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+					var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 					  .addOperation(StellarSdk.Operation.payment({
 						destination: receiverPublicKey,
 						asset: newAsset,
@@ -1004,7 +1005,7 @@ const PAGE_SIZE = 20;
 					$("#paywarning").append('<br><font color="FF0000"><b>...activating it now for you now</b></font>');
 					server.loadAccount(sourcePublicKey)
 					  .then(function(account) {
-						var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+						var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						  .addOperation(StellarSdk.Operation.createAccount({
 							destination: receiverPublicKey,
 							asset: StellarSdk.Asset.native(),
@@ -1106,7 +1107,7 @@ const PAGE_SIZE = 20;
 			  if (trustClean) {
 				server.loadAccount(sourcePublicKey)
 				  .then(function(account) {
-					var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+					var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 					  .addOperation(StellarSdk.Operation.pathPaymentStrictSend({
 						sendAsset: fromAsset,
 						sendAmount: senderAmount,
@@ -1194,7 +1195,7 @@ const PAGE_SIZE = 20;
 						StellarController.createTrustline(assetid);
 						account.incrementSequenceNumber();
 					}
-						var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+						var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						  .addOperation(StellarSdk.Operation.manageBuyOffer(op))
 						  .setTimeout(30).build();
 						transaction.sign(sourceKeypair);
@@ -1248,7 +1249,7 @@ const PAGE_SIZE = 20;
 							price: strueprice+""
 						  }
 				server.loadAccount(sourcePublicKey).then(function(account) {
-						var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+						var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						  .addOperation(StellarSdk.Operation.manageSellOffer(op))
 						  .setTimeout(30).build();
 						transaction.sign(sourceKeypair);
@@ -1339,7 +1340,7 @@ const PAGE_SIZE = 20;
 				}
 				if (offmode=="upauto") $('#'+assetid+'success').show().html('<font color="008800"><b>Auto updating '+displayautoprice+'</b></font>');
 				server.loadAccount(sourcePublicKey).then(function(account) {
-						var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+						var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						  .addOperation(fullop)
 						  .setTimeout(30).build(); // destMin op_too_few_offers issue
 						transaction.sign(sourceKeypair);
@@ -1403,7 +1404,7 @@ const PAGE_SIZE = 20;
 				}
 				server.loadAccount(sourcePublicKey).then(function(account) {
 					  console.log('Delete offer: fromCode '+fromCode+' toCode '+toCode);
-						var transaction = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+						var transaction = new StellarSdk.TransactionBuilder(account, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 						  .addOperation(fullop)
 						  .setTimeout(30).build(); // destMin op_too_few_offers issue
 						transaction.sign(sourceKeypair);
@@ -1478,7 +1479,7 @@ const PAGE_SIZE = 20;
 				}
 			
 				var sourceKeypair = StellarSdk.Keypair.fromSecret($("#key").val().toUpperCase()); // merge into toAccount
-				var transaction = new StellarSdk.TransactionBuilder(acct, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+				var transaction = new StellarSdk.TransactionBuilder(acct, { fee: MAX_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
 				  .addOperation(StellarSdk.Operation.accountMerge({
                             destination: toAccount
                           }))
