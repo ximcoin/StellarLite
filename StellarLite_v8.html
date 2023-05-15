@@ -459,6 +459,13 @@ const MAX_FEE = 10000;
 		return Httpreq.responseText;
 	}
 	
+	function boldNumbersBeforeDecimal(number) {
+		let numberString = number.toString();
+		const splitDecimal = numberString.split('.');
+		const formattedString = '<b>'+splitDecimal[0]+'</b>.'+splitDecimal[1];
+		return formattedString;
+	}
+	
 	function getOrders(assetcode,autoTrade) { //console.log("getOrders "+assetcode+" - "+autoTrade);
 	if (asset_key[assetcode]!=null && asset_key[assetcode]!="") {
 		var maxlength = 20;
@@ -700,7 +707,7 @@ const MAX_FEE = 10000;
 						if (b.balance>0) asset_text = b.asset_code+": "+parseFloat(b.balance); // add trustline buttons
 						trust_buttons += ' <input type="button" id="asset_'+b.asset_code+'" class="abutton w3-button w3-round w3-grey" value="'+asset_text+'"> ';
 						trust_buttons += ' <input type="hidden" id="val_'+b.asset_code+'" value="'+asset_available+'"> ';
-						$("#"+b.asset_code+"-s-asset").html(parseFloat(b.balance-b.selling_liabilities).toFixed(7)+' '+b.asset_code);
+						$("#"+b.asset_code+"-s-asset").html(boldNumbersBeforeDecimal(parseFloat(b.balance-b.selling_liabilities).toFixed(7))+' '+b.asset_code);
 					}
 					if(b.asset_type == "native") {
 						$("#val_xlm_text").html(parseFloat(b.balance));
@@ -754,7 +761,7 @@ const MAX_FEE = 10000;
 				} else {
 				$("#offers_row").hide();
 				}
-				$(".ototal").html((b.balance-stellarfee).toFixed(7)+' XLM');
+				$(".ototal").html(boldNumbersBeforeDecimal((b.balance-stellarfee).toFixed(7))+' XLM');
 				StellarController.checkTransactions();
 				StellarController.checkTrades();
             });
