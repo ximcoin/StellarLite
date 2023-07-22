@@ -6,3 +6,5 @@ To audit the code simply scroll through and make sure that there are no URLs in 
 If there is a link to anywhere else then this could be an attack trying to steal your private key. By spending a few minutes scrolling through the plaintext code you can be sure there is nothing nasty hidden within.
 
 If you would like to contribute some code to this open source tool please feel free to contact admin at stellarlite.io
+
+**Currently there is intermittant problems with https://ticker.stellar.org/graphql taking awhile to load queries. We hope Stellar improves the reliability of this service soon.
