@@ -582,20 +582,20 @@ const MAX_FEE = 10000;
 						}
 					}	
 					if (auto_b[3]==2) { // buy 2% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price+((buyers_data[0].price/100)*2)).toFixed(7); 
-						if (snewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
+						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*2)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
 					}	
 					if (auto_b[3]==3) { // buy 5% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price+((buyers_data[0].price/100)*5)).toFixed(7); 
-						if (snewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
+						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*5)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
 					}	
 					if (auto_b[3]==4) { // buy 10% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price+((buyers_data[0].price/100)*10)).toFixed(7); 
-						if (snewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
+						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*10)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
 					}	
 					if (auto_b[3]==5) { // buy 20% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price+((buyers_data[0].price/100)*20)).toFixed(7); 
-						if (snewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
+						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*20)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
 					}	
 					if (bdo==1 && bnewprice<sellers_data[0].price.toFixed(7)) { 
 						bnewtotal = parseFloat(auto_b[2] * bnewprice).toFixed(7);
@@ -745,7 +745,7 @@ const MAX_FEE = 10000;
 						if(offer_obj._embedded.records[i].buying.asset_type=="native") {
 							otype="Sell"; assetbuy="XLM";
 							assetsell=offer_obj._embedded.records[i].selling.asset_code; 
-							offer_buttons += '<font color="FF6600">Sell <input id="'+offerid+'-s-amount" class="walcalc" type="text" size="12" value="'+assetamount+'"> '+assetsell+' at <input id="'+offerid+'-s-price" class="walcalc" type="text" size="12" value="'+assetprice+'"> for <input id="'+offerid+'-s-total" class="walcalc" type="text" size="12" value="'+parseFloat((assetamount*assetprice).toFixed(7))+'"> '+assetbuy+' </font><input type="button" value="remove" onclick="StellarController.offerAsset(\''+assetsell+'_'+assetbuy+'\',\''+assetsell+'\',\'delete\',\''+offerid+'\');"> <input type="button" value="update" onclick="StellarController.offerAsset(\''+assetsell+'_'+assetbuy+'\',\''+assetsell+'\',\'update\',\''+offerid+'\');"><br>';
+							offer_buttons += '<font color="FF6600">Sell <input id="'+offerid+'-s-amount" class="walcalc" type="text" size="12" value="'+assetamount+'"> '+assetsell+' at <input id="'+offerid+'-s-price" class="walcalc" type="text" size="12" value="'+assetprice.toFixed(7)+'"> for <input id="'+offerid+'-s-total" class="walcalc" type="text" size="12" value="'+parseFloat((assetamount*assetprice).toFixed(7))+'"> '+assetbuy+' </font><input type="button" value="remove" onclick="StellarController.offerAsset(\''+assetsell+'_'+assetbuy+'\',\''+assetsell+'\',\'delete\',\''+offerid+'\');"> <input type="button" value="update" onclick="StellarController.offerAsset(\''+assetsell+'_'+assetbuy+'\',\''+assetsell+'\',\'update\',\''+offerid+'\');"><br>';
 							var s0 = "selected"; var s1 = ""; var s2 = ""; var s3 = ""; var s4 = ""; var s5 = ""; 
 							if ($('#store-s-auto').val()!="") { s0 = "";
 								var auto_s = $('#store-s-auto').val().split("-");
