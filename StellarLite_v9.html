@@ -516,7 +516,7 @@ const MAX_FEE = 10000;
 			if (i!=0) buying_offer_row += '<button id="b_'+oid+'_'+(buyers_data[(i-1)].price+0.0000001).toFixed(7)+'" title="bump down up" class="obumpnew">&#8593;</button>';
 			buying_offer_row +=	'</td></tr>';
 			} else {
-			buying_offer_row +=	'<tr id="b_'+assetcode+'_'+buyers_data[i].price.toFixed(7)+'" class="offerclk"><td><span id="'+assetcode+'_'+buyers_data[i].idkey+'_b" title="'+buyers_data[i].idkey+'" class="ppl">'+buyers_data[i].idmin+'</span></td><td style="text-align:right">'+Math.round(buydepth)+'</td><td style="text-align:right">'+vis(buyers_data[i].amount)+'</td><td style="text-align:right">'+vis(offersum)+'</td><td style="text-align:right"><b>'+buyers_data[i].price.toFixed(7)+'</b></td></tr>';
+			buying_offer_row +=	'<tr id="b_'+assetcode+'_'+buyers_data[i].price.toFixed(7)+'" class="offerclk"><td><span id="'+assetcode+'_'+buyers_data[i].idkey+'_b" title="'+buyers_data[i].idkey+'" class="ppl">'+buyers_data[i].idmin+'</span></td><td style="text-align:right">'+Math.round(buydepth)+'</td><td style="text-align:right">'+vis(buyers_data[i].amount)+'</td><td style="text-align:right">'+vis(offersum)+'</td><td style="text-align:right"><b>'+vis(buyers_data[i].price.toFixed(7))+'</b></td></tr>';
 			}
 		}
 		buying_offer_row += "</table>";
