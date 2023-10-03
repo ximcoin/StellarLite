@@ -8,6 +8,7 @@
 // Edit your personal Stellar token list here.. use https://xxx.xx/.well-known/stellar.toml to get the asset issuer details.
 var assets = [
 	"centre.io|USDC|GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+	"centre.io|EURC|GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2",
 	"aqua.network|AQUA|GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA",
 	"ultrastellar.com|yUSDC|GDGTVWSM4MGS4T7Z6W4RPWOCHE2I6RDFCIFZGS3DOA63LWQTRNZNTTFF",
 	"ultrastellar.com|yXLM|GARDNV3Q7YGT4AKSDF25LT32YSCCW4EV22Y2TV3I2PU2MMXJTEDL5T55",
@@ -1545,7 +1546,7 @@ $(document).ready(function(){
 	var asset_links = "";
 	var asset_row = "";
 	asset_row += '<div id="'+sortedArray[0].counterAssetCode+'-'+asset_domain[sortedArray[0].counterAssetCode]+'_anchor"></div>';
-	asset_row += '<div class="w3-responsive"><table class="w3-table-all w3-large"><tr><td width="160px"></td><td width="150px">Last Price</td><td width="150px">Price USD</td><td width="150px">24h Changes</td><td width="150px">24h Low</td><td width="150px">24h High</td><td width="150px">24h Volume</td><td width="40px"></td></tr></table></div>';
+	asset_row += '<div class="w3-responsive"><table class="w3-table-all w3-large"><tr><td width="160px"></td><td width="150px">Last Price</td><td width="150px">Price USD</td><td width="150px">24h Changes</td><td width="150px">24h High</td><td width="150px">24h Low</td><td width="150px">24h Volume</td><td width="40px"></td></tr></table></div>';
 
 	for (var i=0; i < sortedArray.length; i++) { // grab USD
 		if (sortedArray[i].counterAssetCode == "USDC") usd_val = sortedArray[i].close; 		
@@ -1611,7 +1612,7 @@ $(document).ready(function(){
 				if (next<sortedArray.length) asset_next = sortedArray[next].counterAssetCode;
 
 				asset_links += '<div id="'+asset_val+'-side" class="w3-bar-item w3-button w3-hover-black side-link"><b>'+asset_val+'</b> - <span class="w3-small">'+asset_domain[asset_val]+'</span></div>'+"\n";
-				asset_row += '<div id="'+asset_val+'row" class="w3-responsive" style="font-weight:bold;"><table class="w3-table-all w3-large w3-text-black"><tr id="'+asset_val+'rowoffer" class="rowselect"><td width="160px"><h1 class=" w3-left">'+asset_val+'</h1></td><td width="150px"><span id="'+asset_val+'v1">'+close_val+'</span></td><td width="150px" valign="center">$<span id="'+asset_val+'v2">'+last_usd_val+'</span></td><td width="150px" valign="center"><span id="'+asset_val+'v3" '+change_color+'>'+change_per+'%</span></td><td width="150px"><span id="'+asset_val+'v4">'+low_val+'</span></td><td width="150px"><span id="'+asset_val+'v5">'+high_val+'</span></td><td width="150px"><span id="'+asset_val+'v6">'+vol_val+'</span> XLM</td><td width="40px"><div class="w3-right"><button title="Add '+asset_val+' trustline" id="create'+asset_val+'tl" onclick="StellarController.createTrustline(\''+asset_val+'\');" class="tbutton w3-button w3-circle w3-padding-small w3-grey">+</button></div></td></table></div>';
+				asset_row += '<div id="'+asset_val+'row" class="w3-responsive" style="font-weight:bold;"><table class="w3-table-all w3-large w3-text-black"><tr id="'+asset_val+'rowoffer" class="rowselect"><td width="160px"><h1 class=" w3-left">'+asset_val+'</h1></td><td width="150px"><span id="'+asset_val+'v1">'+close_val+'</span></td><td width="150px" valign="center">$<span id="'+asset_val+'v2">'+last_usd_val+'</span></td><td width="150px" valign="center"><span id="'+asset_val+'v3" '+change_color+'>'+change_per+'%</span></td><td width="150px"><span id="'+asset_val+'v5">'+high_val+'</span></td><td width="150px"><span id="'+asset_val+'v4">'+low_val+'</span></td><td width="150px"><span id="'+asset_val+'v6">'+vol_val+'</span> XLM</td><td width="40px"><div class="w3-right"><button title="Add '+asset_val+' trustline" id="create'+asset_val+'tl" onclick="StellarController.createTrustline(\''+asset_val+'\');" class="tbutton w3-button w3-circle w3-padding-small w3-grey">+</button></div></td></table></div>';
 				asset_row += '<div id="'+asset_val+'offer" class="w3-row" style="display:none;">';
 				asset_row += '<div class="w3-half w3-container"><h2 style="display:inline-block;">Buy</h2> <span id="'+asset_val+'-b-native" class="ototal w3-right" style="margin-right:30px; margin-top:20px;"></span>';
 				asset_row += '<table class="w3-table">';
