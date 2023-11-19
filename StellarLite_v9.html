@@ -8,7 +8,6 @@
 // Edit your personal Stellar token list here.. use https://xxx.xx/.well-known/stellar.toml to get the asset issuer details.
 var assets = [
 	"centre.io|USDC|GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
-	"centre.io|EURC|GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2",
 	"aqua.network|AQUA|GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA",
 	"ultrastellar.com|yUSDC|GDGTVWSM4MGS4T7Z6W4RPWOCHE2I6RDFCIFZGS3DOA63LWQTRNZNTTFF",
 	"ultrastellar.com|yXLM|GARDNV3Q7YGT4AKSDF25LT32YSCCW4EV22Y2TV3I2PU2MMXJTEDL5T55",
@@ -375,7 +374,10 @@ const MAX_FEE = 10000;
 		}
 	}
 	function autoSyncChange() { 
-		$("#syncval").val($("#autoSyncRate").val());
+		$("#syncval").val($("#autoSyncRate").val() || $("#syncval").val() || 60000);
+		clearInterval(syncInterval);
+		syncInterval = setInterval(syncStart, $("#syncval").val());
+		syncStart();
 	}
 	function newChangeAsset() {
 		StellarController.calcAsset($('#from_convert').html()+'_'+$('#changeasset').val());
@@ -482,7 +484,6 @@ const MAX_FEE = 10000;
 			if (buyerkey == $("#pubkey").val()) { idb = "you"; } else { idb = buyerkey.slice(-2);
 				if(idb_data[idb]) {	if(idb_data[idb]!=buyerkey) idb = buyerkey.slice(-3); } else { idb_data[idb] = buyerkey; }
 			}
-			var offersum = parseFloat(buying_obj._embedded.records[i].price) *	parseFloat(buying_obj._embedded.records[i].amount);
 			var bofferprice = parseFloat(buying_obj._embedded.records[i].price_r.d / buying_obj._embedded.records[i].price_r.n); 
 			var obj = {
 				idnum: buying_obj._embedded.records[i].id,
@@ -507,17 +508,18 @@ const MAX_FEE = 10000;
 		if (buyers_data.length < maxlength) maxlength = buyers_data.length;
 		for (let i = 0; i < maxlength; i++) {
 			let oid = buyers_data[i].idnum;
-			let offersum = parseFloat(buyers_data[i].amount / buyers_data[i].price).toFixed(7);
-			buydepth = buydepth + parseFloat(buyers_data[i].amount);
+			let offeramount = parseFloat(buyers_data[i].amount / buyers_data[i].price).toFixed(7);
+			let offerval = parseFloat(buyers_data[i].amount).toFixed(7);
+			buydepth = buydepth + parseFloat(offerval);
 			if(buyers_data[i].idkey == $("#pubkey").val()) { 
-			buying_offer_row +=	'<tr id="b_'+assetcode+'_'+buyers_data[i].price.toFixed(7)+'" class="offerclk"><td><button id="butoff_'+oid+'" class="oshow">&#8597;</button></td><td style="text-align:right">'+Math.round(buydepth)+'</td><td style="text-align:right"><input id="b-'+oid+'-total" style="text-align:right;" class="obump" type="text" size="10" value="'+buyers_data[i].amount+'"></td><td style="text-align:right"><input id="b-'+oid+'-amount" style="text-align:right;" class="obump" type="text" size="10" value="'+offersum+'"></td><td style="text-align:right"><b><input id="b-'+oid+'-price" style="text-align:right;" class="obump" type="text" size="10" value="'+buyers_data[i].price.toFixed(7)+'"></b></td></tr>';
+			buying_offer_row +=	'<tr id="b_'+assetcode+'_'+buyers_data[i].price.toFixed(7)+'" class="offerclk"><td><button id="butoff_'+oid+'" class="oshow">&#8597;</button></td><td style="text-align:right">'+Math.round(buydepth)+'</td><td style="text-align:right"><input id="b-'+oid+'-total" style="text-align:right;" class="obump" type="text" size="10" value="'+buyers_data[i].amount+'"></td><td style="text-align:right"><input id="b-'+oid+'-amount" style="text-align:right;" class="obump" type="text" size="10" value="'+offeramount+'"></td><td style="text-align:right"><b><input id="b-'+oid+'-price" style="text-align:right;" class="obump" type="text" size="10" value="'+buyers_data[i].price.toFixed(7)+'"></b></td></tr>';
 			buying_offer_row +=	'<tr id="offrow_'+oid+'" style="display:none;"><td colspan="2"><button onclick="StellarController.offerAsset(\'XLM_'+assetcode+'\',\''+assetcode+'\',\'delete\',\''+oid+'\');">remove</button></td><td></td><td style="text-align:right"><button onclick="StellarController.offerAsset(\'XLM_'+assetcode+'\',\''+assetcode+'\',\'bump\',\''+oid+'\');">update</button></td><td style="text-align:center">';
 			if (i<maxlength) buying_offer_row += '<button id="b_'+oid+'_'+(buyers_data[(i+1)].price-0.0000001).toFixed(7)+'" title="bump down row" class="obumpnew">&#8595;</button>';
 			buying_offer_row +=	' bump ';
 			if (i!=0) buying_offer_row += '<button id="b_'+oid+'_'+(buyers_data[(i-1)].price+0.0000001).toFixed(7)+'" title="bump down up" class="obumpnew">&#8593;</button>';
 			buying_offer_row +=	'</td></tr>';
 			} else {
-			buying_offer_row +=	'<tr id="b_'+assetcode+'_'+buyers_data[i].price.toFixed(7)+'" class="offerclk"><td><span id="'+assetcode+'_'+buyers_data[i].idkey+'_b" title="'+buyers_data[i].idkey+'" class="ppl">'+buyers_data[i].idmin+'</span></td><td style="text-align:right">'+Math.round(buydepth)+'</td><td style="text-align:right">'+vis(buyers_data[i].amount)+'</td><td style="text-align:right">'+vis(offersum)+'</td><td style="text-align:right"><b>'+vis(buyers_data[i].price.toFixed(7))+'</b></td></tr>';
+			buying_offer_row +=	'<tr id="b_'+assetcode+'_'+buyers_data[i].price.toFixed(7)+'" class="offerclk"><td><span id="'+assetcode+'_'+buyers_data[i].idkey+'_b" title="'+buyers_data[i].idkey+'" class="ppl">'+buyers_data[i].idmin+'</span></td><td style="text-align:right">'+Math.round(buydepth)+'</td><td style="text-align:right">'+vis(offerval)+'</td><td style="text-align:right">'+vis(offeramount)+'</td><td style="text-align:right"><b>'+vis(buyers_data[i].price.toFixed(7))+'</b></td></tr>';
 			}
 		}
 		buying_offer_row += "</table>";
@@ -554,17 +556,21 @@ const MAX_FEE = 10000;
 		if (sellers_data.length < maxlength) maxlength = sellers_data.length;
 		for (let i = 0; i < maxlength; i++) {
 			let oid = sellers_data[i].idnum;
-			let offersum = parseFloat(sellers_data[i].price * sellers_data[i].amount);
-			selldepth = selldepth + offersum;
+			let offeramount = parseFloat(sellers_data[i].amount).toFixed(7);
+			let offerval = parseFloat(sellers_data[i].price * sellers_data[i].amount).toFixed(7);
+			selldepth = selldepth + parseFloat(offerval);
+			
+			//let offersum = parseFloat(sellers_data[i].price * sellers_data[i].amount);
+			//selldepth = selldepth + offersum;
 			if(sellers_data[i].idkey == $("#pubkey").val()) { 
-			selling_offer_row +=	'<tr id="s_'+assetcode+'_'+sellers_data[i].price.toFixed(7)+'" class="offerclk"><td><b><input id="s-'+oid+'-price" class="obump" type="text" size="10" value="'+sellers_data[i].price.toFixed(7)+'"></b></td><td style="text-align:right"><input id="s-'+oid+'-amount" class="obump" style="text-align:right" type="text" size="10" value="'+parseFloat(sellers_data[i].amount).toFixed(7)+'"></td><td style="text-align:right"><input id="s-'+oid+'-total" class="obump" style="text-align:right" type="text" size="10" value="'+offersum.toFixed(7)+'"></td><td style="text-align:right">'+Math.round(selldepth)+'</td><td><button id="butoff_'+oid+'" class="oshow">&#8597;</button></td></tr>';
+			selling_offer_row +=	'<tr id="s_'+assetcode+'_'+sellers_data[i].price.toFixed(7)+'" class="offerclk"><td><b><input id="s-'+oid+'-price" class="obump" type="text" size="10" value="'+sellers_data[i].price.toFixed(7)+'"></b></td><td style="text-align:right"><input id="s-'+oid+'-amount" class="obump" style="text-align:right" type="text" size="10" value="'+parseFloat(sellers_data[i].amount).toFixed(7)+'"></td><td style="text-align:right"><input id="s-'+oid+'-total" class="obump" style="text-align:right" type="text" size="10" value="'+offerval+'"></td><td style="text-align:right">'+Math.round(selldepth)+'</td><td><button id="butoff_'+oid+'" class="oshow">&#8597;</button></td></tr>';
 			selling_offer_row +=	'<tr id="offrow_'+oid+'" style="display:none;"><td style="text-align:center">';
 			if (i!=0) selling_offer_row += '<button id="s_'+oid+'_'+(sellers_data[(i-1)].price-0.0000001).toFixed(7)+'" title="bump down up" class="obumpnew">&#8593;</button>';
 			selling_offer_row +=	' bump ';
 			if (i<maxlength) selling_offer_row += '<button id="s_'+oid+'_'+(sellers_data[(i+1)].price+0.0000001).toFixed(7)+'" title="bump down row" class="obumpnew">&#8595;</button>';
 			selling_offer_row +=	'</td><td><button onclick="StellarController.offerAsset(\''+assetcode+'_XLM\',\''+assetcode+'\',\'bump\',\''+oid+'\');">update</button></td><td></td><td colspan="2"><button onclick="StellarController.offerAsset(\''+assetcode+'_XLM\',\''+assetcode+'\',\'delete\',\''+oid+'\');">remove</button></td></tr>';
 			} else {
-			selling_offer_row += '<tr id="s_'+assetcode+'_'+sellers_data[i].price.toFixed(7)+'" class="offerclk"><td><b>'+vis(sellers_data[i].price.toFixed(7))+'</b></td><td style="text-align:right">'+vis(sellers_data[i].amount)+'</td><td  style="text-align:right">'+vis(offersum.toFixed(7))+'</td><td style="text-align:right">'+Math.round(selldepth)+'</td><td style="text-align:right"><span id="'+assetcode+"_"+sellers_data[i].idkey+'_s" title="'+sellers_data[i].idkey+'" class="ppl">'+sellers_data[i].idmin+'</span></td></tr>';
+			selling_offer_row += '<tr id="s_'+assetcode+'_'+sellers_data[i].price.toFixed(7)+'" class="offerclk"><td><b>'+vis(sellers_data[i].price.toFixed(7))+'</b></td><td style="text-align:right">'+vis(offeramount)+'</td><td  style="text-align:right">'+vis(offerval)+'</td><td style="text-align:right">'+Math.round(selldepth)+'</td><td style="text-align:right"><span id="'+assetcode+"_"+sellers_data[i].idkey+'_s" title="'+sellers_data[i].idkey+'" class="ppl">'+sellers_data[i].idmin+'</span></td></tr>';
 			}
 		}
 		selling_offer_row += "</table>";
@@ -583,20 +589,20 @@ const MAX_FEE = 10000;
 						}
 					}	
 					if (auto_b[3]==2) { // buy 2% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*2)).toFixed(7); 
-						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
+						bnewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*2)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
 					}	
 					if (auto_b[3]==3) { // buy 5% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*5)).toFixed(7); 
-						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
+						bnewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*5)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
 					}	
 					if (auto_b[3]==4) { // buy 10% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*10)).toFixed(7); 
-						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
+						bnewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*10)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
 					}	
 					if (auto_b[3]==5) { // buy 20% less than highest price 
-						snewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*20)).toFixed(7); 
-						if (bnewprice!=$("#"+auto_b[0]+"-b-price").val()) bdo=1;
+						bnewprice = parseFloat(buyers_data[0].price-((buyers_data[0].price/100)*20)).toFixed(7); 
+						if (bnewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
 					}	
 					if (bdo==1 && bnewprice<sellers_data[0].price.toFixed(7)) { 
 						bnewtotal = parseFloat(auto_b[2] * bnewprice).toFixed(7);
@@ -1524,8 +1530,10 @@ const MAX_FEE = 10000;
 		}
     } // Stellar 
 
-$(document).ready(function(){
-	var fullqry = 'query { ';
+	var syncInterval;
+
+	function syncStart() {
+		var fullqry = 'query { ';
 	for (var i=0; i < assets.length; i++) {
 		var asset = assets[i].split("|");
 		fullqry += asset[1].toLowerCase()+': markets(baseAssetCode: "XLM", counterAssetCode: "'+asset[1]+'", counterAssetIssuer: "'+asset[2]+'") { counterAssetCode close baseVolume change high low } ';
@@ -1533,7 +1541,7 @@ $(document).ready(function(){
 	fullqry += ' }';
 
 	sync()
-	window.setInterval(sync, $("#syncval").val())
+	
 	function sync() {
 	fetch('https://ticker.stellar.org/v1/graphql', {
 	  method: 'POST',
@@ -1662,7 +1670,14 @@ $(document).ready(function(){
 
 	  });
     } // sync
+	}
 
+window.onload = function() {
+	syncStart()
+	syncInterval = setInterval(syncStart, $("#syncval").val() || 60000)
+};
+
+$(document).ready(function(){
 		$('#paysend').click(function () {
 			$('#paysend').hide();
 			$('#submitPaysend').fadeIn('slow');
@@ -1751,13 +1766,13 @@ $(document).ready(function(){
 		});
 		$(document).on("click",".offerclk",function(event){
 			var asset_id = $(this).attr('id').split("_");
-			$('#'+asset_id[1]+'-b-price').val((parseFloat(asset_id[2])+0.0000001));
+			$('#'+asset_id[1]+'-b-price').val((parseFloat(asset_id[2])+0.0000001).toFixed(7));
 			if ($('#'+asset_id[1]+'-b-amount').val()!="") {
 				var totalsum = (parseFloat($('#'+asset_id[1]+'-b-amount').val()) * parseFloat($('#'+asset_id[1]+'-b-price').val()));
 				$('#'+asset_id[1]+'-b-total').val(parseFloat(totalsum.toFixed(7)));
 				$('#'+asset_id[1]+'butbtext').html("Buy "+$('#'+asset_id[1]+'-b-amount').val()+" "+asset_id[1]+" for "+parseFloat(totalsum.toFixed(7))+" XLM");
 			}
-			$('#'+asset_id[1]+'-s-price').val((parseFloat(asset_id[2])-0.0000001));
+			$('#'+asset_id[1]+'-s-price').val((parseFloat(asset_id[2])-0.0000001).toFixed(7));
 			if ($('#'+asset_id[1]+'-s-amount').val()!="") {
 				var totalsum = (parseFloat($('#'+asset_id[1]+'-s-amount').val()) * parseFloat($('#'+asset_id[1]+'-s-price').val()));
 				$('#'+asset_id[1]+'-s-total').val(parseFloat(totalsum.toFixed(7)));
