@@ -7,4 +7,4 @@ If there is a url to anywhere else then this could be an attack trying to steal 
 
 If you would like to contribute some code to this open source tool please feel free to contact admin at stellarlite.io
 
-**On 1/3/24 Stellar.org disabled the https://ticker.stellar.org/ service which versions of Stellarlite before 20 relied on. Since version 20 price data is retrieved from https://ticker.stellarlite.io 
+**On 1/3/24 Stellar.org disabled the https://ticker.stellar.org/ service which versions of Stellarlite before v10 relied on. Since version 10 price data is retrieved from https://ticker.stellarlite.io 
