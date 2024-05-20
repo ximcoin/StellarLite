@@ -479,8 +479,8 @@ const MAX_FEE = 10000;
 		var buyers_data = [];
 		var sellers_data = [];
 		var offersurl = assetcode + ":" + asset_key[assetcode];
-		var selling_obj = JSON.parse(Get("https://horizon.stellar.org/offers/?selling="+offersurl+"&buying=native&limit=60&order=desc"));
-		var buying_obj = JSON.parse(Get("https://horizon.stellar.org/offers/?buying="+offersurl+"&selling=native&limit=60&order=desc"));
+		var selling_obj = JSON.parse(Get("https://horizon.stellar.org/offers/?selling="+offersurl+"&buying=native&limit=80&order=desc"));
+		var buying_obj = JSON.parse(Get("https://horizon.stellar.org/offers/?buying="+offersurl+"&selling=native&limit=80&order=desc"));
 		var buying_offer_row = '<div id="boffacc'+assetcode+'" style="display:none; font-size:12px;"></div><table class="w3-table w3-hoverable w3-bordered" style="font-size: 13px;"><tr><th colspan="6">Buy Offers</th></tr><tr><td></td><td style="text-align:right">Depth</td><td style="text-align:right">XLM</td><td style="text-align:right">'+assetcode+'</td><td style="text-align:right">Price</td></tr>';		
 		var idb_data = [];
 		for (let i = 0; i < buying_obj._embedded.records.length; i++) {
