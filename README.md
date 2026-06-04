@@ -1,6 +1,6 @@
 # StellarLite
 Source code to the [StellarLite.io](https://stellarlite.io) single file wallet and trading tool.
-For your personal key security please audit this html & javascript code visually before saving and running the StellarLite tool in any web browser. You should also submit your copy of StellarLite_v10.html to https://virustotal.com and other malicious behavior scanners like https://urlscan.io
+For your personal key security please audit this html & javascript code visually before saving and running the StellarLite tool in any web browser. You should also submit your copy of StellarLite_v11.html to https://virustotal.com and other malicious behavior scanners like https://urlscan.io
 
 To visually audit the code simply scroll through and make sure that there are no URLs in there which link to anything other than the 
 stellar.org horizon and stellarlite.io
