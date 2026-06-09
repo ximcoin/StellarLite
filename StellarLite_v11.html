@@ -599,11 +599,14 @@ const MAX_FEE = 10000;
 						if (bnewprice!=$("#"+auto_b[0]+"-s-price").val()) bdo=1;
 					}	
 					if (bdo==1 && bnewprice<sellers_data[0].price.toFixed(7)) { 
-						bnewtotal = parseFloat(auto_b[2] * bnewprice).toFixed(7);
-						console.log("Buy "+auto_b[2]+" "+auto_b[1]+" for "+bnewtotal+" XLM at price:"+bnewprice+" from "+$("#"+auto_b[0]+"-b-price").val());
+						// Read live remaining amount from buyers_data for this offer id
+						var blive = buyers_data.find(function(r){ return r.idnum == auto_b[0]; });
+						var bamount = blive ? parseFloat(blive.amount / blive.price).toFixed(7) : auto_b[2];
+						bnewtotal = parseFloat(bamount * bnewprice).toFixed(7);
+						console.log("Buy "+bamount+" "+auto_b[1]+" for "+bnewtotal+" XLM at price:"+bnewprice+" from "+$("#"+auto_b[0]+"-b-price").val());
 						$("#"+auto_b[0]+"-b-price").val(bnewprice);
-						$("#"+auto_b[0]+"-b-amount").val(auto_b[2]);
-						$("#"+auto_b[0]+"-b-total").val(bnewtotal);		 
+						$("#"+auto_b[0]+"-b-amount").val(bamount);
+						$("#"+auto_b[0]+"-b-total").val(bnewtotal);
 						StellarController.offerAsset('XLM_'+auto_b[1],auto_b[1],'upauto',auto_b[0]);
 					}
 				}
@@ -639,11 +642,14 @@ const MAX_FEE = 10000;
 						if (snewprice!=$("#"+auto_s[0]+"-s-price").val()) sdo=1;
 					}	
 					if (sdo==1 && snewprice>buyers_data[0].price.toFixed(7)) {
-						snewtotal = parseFloat(auto_s[2] * snewprice).toFixed(7);
-						console.log("Sell "+auto_s[2]+" "+auto_s[1]+" for "+snewtotal+" XLM at price:"+snewprice+" from "+$("#"+auto_s[0]+"-s-price").val());
+						// Read live remaining amount from sellers_data for this offer id
+						var slive = sellers_data.find(function(r){ return r.idnum == auto_s[0]; });
+						var samount = slive ? parseFloat(slive.amount).toFixed(7) : auto_s[2];
+						snewtotal = parseFloat(samount * snewprice).toFixed(7);
+						console.log("Sell "+samount+" "+auto_s[1]+" for "+snewtotal+" XLM at price:"+snewprice+" from "+$("#"+auto_s[0]+"-s-price").val());
 						$("#"+auto_s[0]+"-s-price").val(snewprice);
-						$("#"+auto_s[0]+"-s-amount").val(auto_s[2]);
-						$("#"+auto_s[0]+"-s-total").val(snewtotal);	
+						$("#"+auto_s[0]+"-s-amount").val(samount);
+						$("#"+auto_s[0]+"-s-total").val(snewtotal);
 						StellarController.offerAsset(auto_s[1]+'_XLM',auto_s[1],'upauto',auto_s[0]);
 					}
 				}
